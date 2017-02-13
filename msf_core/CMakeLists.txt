@@ -10,7 +10,7 @@ project(msf_core)
 set(CMAKE_BUILD_TYPE Release)
 
 #build with boost 1.6x
-add_definitions(-DBOOST_NO_CXX11_VARIADIC_TEMPLATES)
+# add_definitions(-DBOOST_NO_CXX11_VARIADIC_TEMPLATES)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/)
 
