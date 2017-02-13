@@ -64,6 +64,7 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
   ros::Publisher pubPose_;  ///< Publishes 6DoF pose output.
   ros::Publisher pubOdometry_;  ///< Publishes odometry output.
   ros::Publisher pubPoseAfterUpdate_;  ///< Publishes 6DoF pose output after the update has been applied.
+  ros::Publisher pubPoseAfterUpdateNoCov_;  ///< Publishes 6DoF pose output without covariance after the update has been applied.
   ros::Publisher pubPoseCrtl_;  ///< Publishes 6DoF pose including velocity output.
   ros::Publisher pubCorrect_;  ///< Publishes corrections for external state propagation.
   ros::Publisher pubCovCore_;  ///< Publishes the covariance matrix for the core states.
@@ -98,6 +99,8 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
     pubOdometry_ = nh.advertise < nav_msgs::Odometry> ("odometry", 100);
     pubPoseAfterUpdate_ = nh.advertise
         < geometry_msgs::PoseWithCovarianceStamped > ("pose_after_update", 100);
+    pubPoseAfterUpdateNoCov_ = nh.advertise
+        < geometry_msgs::PoseStamped > ("pose_after_update_nocov", 100);
     pubPoseCrtl_ = nh.advertise < sensor_fusion_comm::ExtState
         > ("ext_state", 1);
     pubCovCore_ = nh.advertise<sensor_fusion_comm::DoubleMatrixStamped>(
@@ -330,6 +333,20 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
 
       state->ToPoseMsg(msgPose);
       pubPoseAfterUpdate_.publish(msgPose);
+    }
+
+    // Publish pose wihout covariance for 6DOF after update
+    if (pubPoseAfterUpdateNoCov_.getNumSubscribers()) {
+      // Publish pose after correction with covariance.
+      geometry_msgs::PoseStamped msgPose;
+      msgPose.header.stamp = ros::Time(state->time);
+      msgPose.header.seq = msg_seq;
+      msgPose.header.frame_id = msf_output_frame_;
+
+      geometry_msgs::PoseWithCovarianceStamped msgPoseCov;
+      state->ToPoseMsg(msgPoseCov);
+      msgPose.pose = msgPoseCov.pose.pose;
+      pubPoseAfterUpdateNoCov_.publish(msgPose);
     }
 
     {
