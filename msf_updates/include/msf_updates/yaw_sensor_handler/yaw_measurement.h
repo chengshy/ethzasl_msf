@@ -118,7 +118,6 @@ struct YawMeasurement : public YawMeasurementBase {
       };
 
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~FIXIT
       // Construct H matrix.
       // Yaw:
       H_old.block<1, 1>(0, idx_q + 2)(0) = 1;  // yaw
@@ -128,9 +127,9 @@ struct YawMeasurement : public YawMeasurementBase {
       // Construct residuals.
       // Yaw
       Eigen::Quaterniond qyaw_old = Eigen::Quaterniond(state.Get<StateDefinition_T::q>());
+      Eigen::Quaterniond qerr = qyaw_old.conjugate() * z_q_;
 
-      r_old.block<1, 1>(0, 0) = (get_yaw(z_q_) + state.Get<StateDefinition_T::b_yaw>())
-          - get_yaw(qyaw_old);
+      r_old.block<1, 1>(0, 0) = get_yaw(qerr);
 
       // Call update step in base class.
       this->CalculateAndApplyCorrection(state_nonconst_new, core, H_old, r_old, R_);

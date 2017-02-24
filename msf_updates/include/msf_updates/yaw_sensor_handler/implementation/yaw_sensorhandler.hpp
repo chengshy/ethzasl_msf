@@ -38,7 +38,7 @@ YawSensorHandler::YawSensorHandler(
 
   subYaw_ =
       nh.subscribe<geometry_msgs::QuaternionStamped>
-      ("yaw_in", 20, &YawSensorHandler::MeasurementCallback, this);
+      ("yaw_input", 20, &YawSensorHandler::MeasurementCallback, this);
 }
 
 void YawSensorHandler::SetNoises(double n_zq) {
