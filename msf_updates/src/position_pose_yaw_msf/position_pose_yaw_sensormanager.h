@@ -107,7 +107,7 @@ class PositionPoseYawSensorManager : public msf_core::MSF_SensorManagerROS<
     position_handler_->SetNoises(config.position_noise_meas);
     position_handler_->SetDelay(config.position_delay);
 
-    yaw_handler_->SetNoises(config.yaw_noise_n_zq);
+    yaw_handler_->SetNoises(config.yaw_noise_meas_q);
     yaw_handler_->SetDelay(config.yaw_delay);
     if ((level & msf_updates::PositionPoseYawSensor_INIT_FILTER)
         && config.core_init_filter == true) {
@@ -272,8 +272,12 @@ class PositionPoseYawSensorManager : public msf_core::MSF_SensorManagerROS<
         config_.pose_noise_q_ic);
     const msf_core::Vector3 npicv = msf_core::Vector3::Constant(
         config_.pose_noise_p_ic);
+    const msf_core::Vector3 npipv = msf_core::Vector3::Constant(
+        config_.position_noise_p_ip);
     const msf_core::Vector1 n_L = msf_core::Vector1::Constant(
         config_.pose_noise_scale);
+    const msf_core::Vector1 nb_yaw = msf_core::Vector1::Constant(
+        config_.yaw_noise_bias_q);
 
     // Compute the blockwise Q values and store them with the states,
     // these then get copied by the core to the correct places in Qd.
@@ -287,6 +291,11 @@ class PositionPoseYawSensorManager : public msf_core::MSF_SensorManagerROS<
         (dt * nqicv.cwiseProduct(nqicv)).asDiagonal();
     state.GetQBlock<StateDefinition_T::p_ic>() =
         (dt * npicv.cwiseProduct(npicv)).asDiagonal();
+
+    state.GetQBlock<StateDefinition_T::p_ip>() =
+        (dt * npipv.cwiseProduct(npipv)).asDiagonal();
+    state.GetQBlock<StateDefinition_T::b_yaw>() =
+        (dt * nb_yaw.cwiseProduct(nb_yaw)).asDiagonal();
   }
 
   virtual void SetStateCovariance(
