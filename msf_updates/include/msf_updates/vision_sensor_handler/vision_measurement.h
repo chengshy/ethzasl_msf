@@ -143,8 +143,8 @@ struct VisionMeasurement : public VisionMeasurementBase {
         fixed_p_pos_imu ?
             Eigen::Matrix<double, 3, 3>::Zero() : (C_q.transpose()).eval();  //p_pos_imu_
 
-    H.block<1, 1>(0, idxstartcorr_q_ + 2) (0) = 1.0;
-    H.block<1, 1>(0, idxstartcorr_b_yaw)(0) = -1.0;  //yaw_b
+    H.block<1, 1>(3, idxstartcorr_q_ + 2) (0) = 1.0;
+    H.block<1, 1>(3, idxstartcorr_b_yaw)(0) = -1.0;  //yaw_b
 
   }
 
