@@ -24,6 +24,7 @@ generate_dynamic_reconfigure_options(
     cfg/SphericalPositionSensor.cfg
     cfg/PositionPoseYawSensor.cfg
     cfg/PositionYawSensor.cfg
+    cfg/SingleVisionSensor.cfg
 )
 
 catkin_package(
@@ -47,6 +48,7 @@ add_subdirectory(src/position_pose_msf)
 add_subdirectory(src/spherical_msf)
 add_subdirectory(src/position_pose_yaw_msf)
 add_subdirectory(src/position_yaw_msf)
+add_subdirectory(src/vision_msf)
 endif()
 
 add_executable(test_distort src/test/test_distort.cc)
