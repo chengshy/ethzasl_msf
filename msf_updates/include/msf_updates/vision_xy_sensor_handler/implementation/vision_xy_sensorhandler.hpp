@@ -47,7 +47,7 @@ VisionXYSensorHandler<MANAGER_TYPE>::VisionXYSensorHandler(
 
   subPoseStamped_ =
       nh.subscribe<geometry_msgs::PoseStamped>
-  ("vision_input", 20, &VisionSensorHandler::MeasurementCallback, this);
+  ("vision_input", 20, &VisionXYSensorHandler::MeasurementCallback, this);
 
   z_p_.setZero();
   z_q_.setIdentity();

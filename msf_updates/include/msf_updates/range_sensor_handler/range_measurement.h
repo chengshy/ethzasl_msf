@@ -89,7 +89,7 @@ struct RangeMeasurement : public RangeMeasurementBase {
     }
 
     // Check the range data
-    if (z_p_ < range_min_ || z_p_ > range_max_) {
+    if (z_p_(0) < range_min_ || z_p_(0) > range_max_) {
       MSF_WARN_STREAM(
           "Range measurement is not valid");
       return;  // Early abort.

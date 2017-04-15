@@ -172,7 +172,7 @@ struct VisionXYMeasurement : public VisionXYMeasurementBase {
       // Position
       r_old.block<2, 1>(0, 0) = z_p_
           - (state.Get<StateDefinition_T::p>()
-              + C_q.transpose() * state.Get<StateDefinition_T::p_ip>()).block<2, 2>(0, 0);
+              + C_q.transpose() * state.Get<StateDefinition_T::p_ip>()).block<2, 1>(0, 0);
 
       Eigen::Quaterniond qyaw_old = Eigen::Quaterniond(state.Get<StateDefinition_T::q>());
       Eigen::Quaterniond qerr = qyaw_old.conjugate() * z_q_;
