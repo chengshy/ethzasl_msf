@@ -35,6 +35,8 @@
 #include <msf_core/msf_sensormanager.h>
 #include <msf_core/msf_types.h>
 
+#include <std_msgs/Float64.h>
+
 namespace msf_core {
 
 enum {
@@ -70,6 +72,8 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
   ros::Publisher pubCovCore_;  ///< Publishes the covariance matrix for the core states.
   ros::Publisher pubCovAux_;  ///< Publishes the covariance matrix for the auxiliary states.
   ros::Publisher pubCovCoreAux_; ///< Publishes the covariance matrix for the cross-correlations between core and auxiliary states.
+  ros::Publisher pub_latency_imu_; /// Publishes imu processing latency
+  ros::Publisher pub_latency_correct_; /// Publishes corection processing latency
 
   std::string msf_output_frame_;
 
@@ -109,6 +113,9 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
         "cov_aux", 10);
     pubCovCoreAux_ = nh.advertise<sensor_fusion_comm::DoubleMatrixStamped>(
         "cov_core_aux", 10);
+
+    pub_latency_imu_ = nh.advertise< std_msgs::Float64>("msf_pose_latency", 1);
+    pub_latency_correct_ = nh.advertise< std_msgs::Float64>("msf_correct_latency", 1);
 
     hl_state_buf_.state.resize(HLI_EKF_STATE_SIZE, 0);
 
@@ -227,6 +234,11 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
       state->ToExtStateMsg(msgPoseCtrl);
       pubPoseCrtl_.publish(msgPoseCtrl);
 
+    }
+    if (pub_latency_imu_.getNumSubscribers()){
+      std_msgs::Float64Ptr msg(new std_msgs::Float64);
+      msg->data = (ros::Time::now() - ros::Time(state->time)).toSec();
+      pub_latency_imu_.publish(msg);
     }
   }
 
@@ -386,6 +398,12 @@ struct MSF_SensorManagerROS : public msf_core::MSF_SensorManager<EKFState_T> {
       msg->header = msgCorrect_.header;
       state->GetCoreAuxCovariance(*msg);
       pubCovCoreAux_.publish(msg);
+    }
+
+    if (pub_latency_correct_.getNumSubscribers()){
+      std_msgs::Float64Ptr msg(new std_msgs::Float64);
+      msg->data = (ros::Time::now() - ros::Time(state->time)).toSec();
+      pub_latency_correct_.publish(msg);
     }
     msg_seq++;
   }
