@@ -33,6 +33,7 @@ class RangeSensorHandler : public msf_core::SensorHandler<
   };
   Eigen::Matrix<double, 1, 1> z_p_;  ///< Range measurement.
   double n_zp_;  ///< Range measurement noise.
+  double delay_;
   Eigen::Matrix<double, 1, 1> z_average_p;  ///<Averaged range measurement.
   double heightbuff[heightbuffsize];
   ros::Subscriber subRange_;
@@ -50,6 +51,7 @@ class RangeSensorHandler : public msf_core::SensorHandler<
   }
   // Setters for configure values.
   void SetNoises(double n_zp);
+  void SetDelay(double delay);
 };
 }  // namespace msf_range_sensor
 #include "implementation/range_sensorhandler.hpp"

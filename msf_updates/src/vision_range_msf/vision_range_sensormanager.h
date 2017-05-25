@@ -88,6 +88,7 @@ class VisionRangeSensorManager : public msf_core::MSF_SensorManagerROS<
     vision_xy_handler_->SetNoises(config.vision_noise_meas_p, config.vision_noise_meas_yaw);
     vision_xy_handler_->SetDelay(config.vision_delay);
     range_handler_->SetNoises(config.range_noise_meas_p);
+    range_handler_->SetDelay(config.range_delay);
     if ((level & msf_updates::VisionRangeSensor_INIT_FILTER)
         && config.core_init_filter == true) {
       Init(1.0);

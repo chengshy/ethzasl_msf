@@ -26,6 +26,7 @@ RangeSensorHandler::RangeSensorHandler(
     std::string topic_namespace, std::string parameternamespace)
     : SensorHandler<msf_updates::EKFState>(meas, topic_namespace,
                                            parameternamespace),
+      delay_(0),
       n_zp_(1e-6) {
   ros::NodeHandle pnh("~/range_sensor");
   ros::NodeHandle nh("msf_updates");
@@ -45,6 +46,10 @@ void RangeSensorHandler::SetNoises(double n_zp) {
   n_zp_ = n_zp;
 }
 
+void RangeSensorHandler::SetDelay(double delay) {
+  delay_ = delay;
+}
+
 void RangeSensorHandler::MeasurementCallback(
     const sensor_msgs::RangeConstPtr & msg) {
 
@@ -60,7 +65,7 @@ void RangeSensorHandler::MeasurementCallback(
       new range_measurement::RangeMeasurement(
           n_zp_, true, this->sensorID, enable_mah_outlier_rejection_,
           mah_threshold_));
-  meas->MakeFromSensorReading(msg, msg->header.stamp.toSec());
+  meas->MakeFromSensorReading(msg, msg->header.stamp.toSec() - delay_);
 
   z_p_ = meas->z_p_;  // Store this for the init procedure.
 
