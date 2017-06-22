@@ -26,6 +26,7 @@ generate_dynamic_reconfigure_options(
     cfg/PositionYawSensor.cfg
     cfg/SingleVisionSensor.cfg
     cfg/VisionRangeSensor.cfg
+    cfg/OptiFlowYawRangeSensor.cfg
 )
 
 catkin_package(
@@ -51,6 +52,7 @@ add_subdirectory(src/position_pose_yaw_msf)
 add_subdirectory(src/position_yaw_msf)
 add_subdirectory(src/vision_msf)
 add_subdirectory(src/vision_range_msf)
+add_subdirectory(src/optiflow_yaw_range_msf)
 endif()
 
 add_executable(test_distort src/test/test_distort.cc)
