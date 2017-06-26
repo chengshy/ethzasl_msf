@@ -77,7 +77,7 @@ struct OptiFlowMeasurement : public OptiFlowMeasurementBase {
     H.setZero();
 
     //Get rotation matrix
-    Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().toRotationMatrix();
+    Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().conjugate().toRotationMatrix();
 
     Eigen::Vector3d v_iw = state.Get<StateDefinition_T::v>();
 
@@ -113,7 +113,7 @@ struct OptiFlowMeasurement : public OptiFlowMeasurementBase {
 
     CalculateH(non_const_state, H_new);
 
-    Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().toRotationMatrix();
+    Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().conjugate().toRotationMatrix();
     Eigen::Vector3d v_iw = state.Get<StateDefinition_T::v>();
     Eigen::Vector2d z_v_exp = (C_iw * v_iw).block<2,1>(0,0);
 
