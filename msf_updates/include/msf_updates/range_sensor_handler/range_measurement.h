@@ -103,22 +103,24 @@ struct RangeMeasurement : public RangeMeasurementBase {
               StateDefinition_T::p>::value,
           msf_tmp::CorrectionStateLengthForType>::value,
 
-      idx_b_p = msf_tmp::GetStartIndex<EKFState_T::StateSequence_T,
-          typename msf_tmp::GetEnumStateType<EKFState_T::StateSequence_T,
-              StateDefinition_T::b_p>::value,
-          msf_tmp::CorrectionStateLengthForType>::value
+      //idx_b_p = msf_tmp::GetStartIndex<EKFState_T::StateSequence_T,
+      //    typename msf_tmp::GetEnumStateType<EKFState_T::StateSequence_T,
+      //        StateDefinition_T::b_p>::value,
+      //    msf_tmp::CorrectionStateLengthForType>::value
     };
 
     // Construct H matrix.
     // Position:
     H_old.block<1, 1>(0, idx_p + 2)(0) = 1;  // p_z
     // Pressure bias.
-    H_old.block<1, 1>(0, idx_b_p)(0) = -1;  //p_b
+    // H_old.block<1, 1>(0, idx_b_p)(0) = -1;  //p_b
 
     // Construct residuals.
     // Height.
-    r_old.block<1, 1>(0, 0) = (z_p_ + state.Get<StateDefinition_T::b_p>())
-        - state.Get<StateDefinition_T::p>().block<1, 1>(2, 0);
+    //r_old.block<1, 1>(0, 0) = (z_p_ + state.Get<StateDefinition_T::b_p>())
+    //    - state.Get<StateDefinition_T::p>().block<1, 1>(2, 0);
+
+    r_old.block<1, 1>(0, 0) = z_p_ - state.Get<StateDefinition_T::p>().block<1, 1>(2, 0);
 
     // Call update step in base class.
     this->CalculateAndApplyCorrection(non_const_state, core, H_old, r_old, R_);

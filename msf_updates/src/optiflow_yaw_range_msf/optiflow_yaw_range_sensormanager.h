@@ -116,8 +116,8 @@ class OptiFlowYawRangeSensorManager : public msf_core::MSF_SensorManagerROS<
     Eigen::Matrix<double, 3, 1> p, v, b_w, b_a, g, w_m, a_m;
     Eigen::Quaternion<double> q;
     msf_core::MSF_Core<EKFState_T>::ErrorStateCov P;
-    Eigen::Matrix<double, 1, 1> b_yaw;
-    Eigen::Matrix<double, 1, 1> b_p;
+    //Eigen::Matrix<double, 1, 1> b_yaw;
+    //Eigen::Matrix<double, 1, 1> b_p;
 
     // Init values.
     g << 0, 0, 9.81;  /// Gravity.
@@ -127,8 +127,8 @@ class OptiFlowYawRangeSensorManager : public msf_core::MSF_SensorManagerROS<
     v << 0, 0, 0;			/// Robot velocity (IMU centered).
     w_m << 0, 0, 0;		/// Initial angular velocity.
 
-    b_yaw << 0;
-    b_p << 0;
+    //b_yaw << 0;
+    //b_p << 0;
 
     q = Eigen::Quaterniond::Identity();
 
@@ -166,8 +166,8 @@ class OptiFlowYawRangeSensorManager : public msf_core::MSF_SensorManagerROS<
     meas->SetStateInitValue < StateDefinition_T::q > (q);
     meas->SetStateInitValue < StateDefinition_T::b_w > (b_w);
     meas->SetStateInitValue < StateDefinition_T::b_a > (b_a);
-    meas->SetStateInitValue < StateDefinition_T::b_yaw> (b_yaw);
-    meas->SetStateInitValue < StateDefinition_T::b_yaw> (b_p);
+    //meas->SetStateInitValue < StateDefinition_T::b_yaw> (b_yaw);
+    //meas->SetStateInitValue < StateDefinition_T::b_yaw> (b_p);
 
     SetStateCovariance(meas->GetStateCovariance());  // Call my set P function.
     meas->Getw_m() = w_m;
@@ -187,17 +187,17 @@ class OptiFlowYawRangeSensorManager : public msf_core::MSF_SensorManagerROS<
   }
 
   virtual void CalculateQAuxiliaryStates(EKFState_T& state, double dt) const {
-    const msf_core::Vector1 nb_yaw = msf_core::Vector1::Constant(
-        config_.yaw_noise_bias);
-    const msf_core::Vector1 nb_p = msf_core::Vector1::Constant(
-        config_.range_noise_bias_p);
+    //const msf_core::Vector1 nb_yaw = msf_core::Vector1::Constant(
+    //    config_.yaw_noise_bias);
+    //const msf_core::Vector1 nb_p = msf_core::Vector1::Constant(
+    //    config_.range_noise_bias_p);
 
     // Compute the blockwise Q values and store them with the states,
     //these then get copied by the core to the correct places in Qd.
-    state.GetQBlock<StateDefinition_T::b_yaw>() = 
-        (dt * nb_yaw.cwiseProduct(nb_yaw)).asDiagonal();
-    state.GetQBlock<StateDefinition_T::b_p>() = 
-        (dt * nb_p.cwiseProduct(nb_p)).asDiagonal();
+    //state.GetQBlock<StateDefinition_T::b_yaw>() = 
+    //    (dt * nb_yaw.cwiseProduct(nb_yaw)).asDiagonal();
+    //state.GetQBlock<StateDefinition_T::b_p>() = 
+    //    (dt * nb_p.cwiseProduct(nb_p)).asDiagonal();
   }
 
   virtual void SetStateCovariance(

@@ -111,10 +111,10 @@ struct YawMeasurement : public YawMeasurementBase {
             StateDefinition_T::q>::value,
           msf_tmp::CorrectionStateLengthForType>::value,
 
-        idx_b_yaw = msf_tmp::GetStartIndex<EKFState_T::StateSequence_T,
-          typename msf_tmp::GetEnumStateType<EKFState_T::StateSequence_T,
-            StateDefinition_T::b_yaw>::value,
-          msf_tmp::CorrectionStateLengthForType>::value
+        //idx_b_yaw = msf_tmp::GetStartIndex<EKFState_T::StateSequence_T,
+        //  typename msf_tmp::GetEnumStateType<EKFState_T::StateSequence_T,
+        //    StateDefinition_T::b_yaw>::value,
+        //  msf_tmp::CorrectionStateLengthForType>::value
       };
 
 
@@ -122,13 +122,14 @@ struct YawMeasurement : public YawMeasurementBase {
       // Yaw:
       H_old.block<1, 1>(0, idx_q + 2)(0) = 1;  // yaw
       // Yaw bias.
-      H_old.block<1, 1>(0, idx_b_yaw)(0) = -1;  //yaw_b
+      //H_old.block<1, 1>(0, idx_b_yaw)(0) = -1;  //yaw_b
 
       // Construct residuals.
       // Yaw
       Eigen::Quaterniond qyaw_old = Eigen::Quaterniond(state.Get<StateDefinition_T::q>());
 
-      r_old.block<1, 1>(0, 0) = get_yaw(z_q_) - (get_yaw(qyaw_old) - state.Get<StateDefinition_T::b_yaw>());
+      //r_old.block<1, 1>(0, 0) = get_yaw(z_q_) - (get_yaw(qyaw_old) - state.Get<StateDefinition_T::b_yaw>());
+      r_old.block<1, 1>(0, 0) = get_yaw(z_q_) - get_yaw(qyaw_old);
 
       // Call update step in base class.
       this->CalculateAndApplyCorrection(state_nonconst_new, core, H_old, r_old, R_);

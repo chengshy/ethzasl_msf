@@ -34,8 +34,8 @@ enum StateDefinition {  // Must not manually set the enum values!
   q,
   b_w,
   b_a,
-  b_yaw,
-  b_p
+  //b_yaw,
+  //b_p
 };
 
 namespace {
@@ -55,10 +55,10 @@ typedef boost::fusion::vector<
     msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, b_w,
         msf_core::CoreStateWithoutPropagation>,  ///< Gyro biases.                      
     msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, b_a,
-        msf_core::CoreStateWithoutPropagation>,  ///< Acceleration biases.              
+        msf_core::CoreStateWithoutPropagation>  ///< Acceleration biases.              
 
-    msf_core::StateVar_T<Eigen::Matrix<double, 1, 1>, b_yaw>,  // Vision sensor yaw bias
-    msf_core::StateVar_T<Eigen::Matrix<double, 1, 1>, b_p>  // range sensor bias
+    //msf_core::StateVar_T<Eigen::Matrix<double, 1, 1>, b_yaw>,  // Vision sensor yaw bias
+    //msf_core::StateVar_T<Eigen::Matrix<double, 1, 1>, b_p>  // range sensor bias
 > fullState_T;
 }
 
