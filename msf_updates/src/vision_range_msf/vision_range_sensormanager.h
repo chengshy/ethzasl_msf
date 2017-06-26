@@ -137,11 +137,11 @@ class VisionRangeSensorManager : public msf_core::MSF_SensorManagerROS<
         "initial measurement pos:[" << p_vc.transpose() << "] orientation: " << STREAMQUAT(q));
 
     // check if we have already input from the measurement sensor
-    if (vision_xy_handler_->ReceivedFirstMeasurement())
+    if (!vision_xy_handler_->ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
           "No measurements received yet to initialize position xy - using [0 0]");
 
-    if (range_handler_->ReceivedFirstMeasurement())
+    if (!range_handler_->ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
           "No measurements received yet to initialize position z - using 0");
 

@@ -141,15 +141,15 @@ class OptiFlowYawRangeSensorManager : public msf_core::MSF_SensorManagerROS<
         "initial measurement pos:[" << p.transpose() << "] orientation: " << STREAMQUAT(q));
 
     // check if we have already input from the measurement sensor
-    if (optiflow_handler_->ReceivedFirstMeasurement())
+    if (!optiflow_handler_->ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
           "No measurements received yet from optical flow");
 
-    if (range_handler_->ReceivedFirstMeasurement())
+    if (!range_handler_->ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
           "No measurements received yet to initialize position z - using 0");
 
-    if (yaw_handler_ -> ReceivedFirstMeasurement())
+    if (!yaw_handler_ -> ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
           "No measurements received yet to initialize yaw - using 0");
 
