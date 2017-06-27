@@ -120,6 +120,7 @@ class OptiFlowYawRangeSensorManager : public msf_core::MSF_SensorManagerROS<
     //Eigen::Matrix<double, 1, 1> b_p;
 
     // Init values.
+    p << 0, 0, 0;
     g << 0, 0, 9.81;  /// Gravity.
     b_w << 0, 0, 0;		/// Bias gyroscopes.
     b_a << 0, 0, 0;		/// Bias accelerometer.
