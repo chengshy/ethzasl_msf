@@ -126,7 +126,7 @@ struct YawMeasurement : public YawMeasurementBase {
 
       // Construct residuals.
       // Yaw
-      Eigen::Quaterniond qyaw_old = state.Get<StateDefinition_T::q>().conjugate();
+      Eigen::Quaterniond qyaw_old = state.Get<StateDefinition_T::q>();
       Eigen::Quaterniond q_err = qyaw_old.conjugate() * z_q_;
 
       //r_old.block<1, 1>(0, 0) = get_yaw(z_q_) - (get_yaw(qyaw_old) - state.Get<StateDefinition_T::b_yaw>());

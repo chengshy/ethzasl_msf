@@ -77,19 +77,19 @@ struct OptiFlowMeasurement : public OptiFlowMeasurementBase {
     H.setZero();
 
     //Get rotation matrix
-    Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().conjugate().toRotationMatrix();
+    //Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().conjugate().toRotationMatrix();
 
-    Eigen::Vector3d v_iw = state.Get<StateDefinition_T::v>();
+    //Eigen::Vector3d v_iw = state.Get<StateDefinition_T::v>();
 
-    Eigen::Matrix3d v_body_skew = Skew(C_iw * v_iw);
+    //Eigen::Matrix3d v_body_skew = Skew(C_iw * v_iw);
 
     enum{
       idx_startcoor_v_ = msf_tmp::GetStartIndexInCorrection<StateSequence_T, StateDefinition_T::v>::value,
-      idx_startcoor_q_ = msf_tmp::GetStartIndexInCorrection<StateSequence_T, StateDefinition_T::q>::value,
+      //idx_startcoor_q_ = msf_tmp::GetStartIndexInCorrection<StateSequence_T, StateDefinition_T::q>::value,
     };
 
-    H.block<2,3>(0, idx_startcoor_v_) = C_iw.block<2,3>(0,0);
-    H.block<2,3>(0, idx_startcoor_q_) = v_body_skew.block<2,3>(0,0);
+    H.block<2,2>(0, idx_startcoor_v_) = Eigen::Matrix2d::Identity();
+    //H.block<2,3>(0, idx_startcoor_q_) = v_body_skew.block<2,3>(0,0);
   }
 
   /**
@@ -113,11 +113,14 @@ struct OptiFlowMeasurement : public OptiFlowMeasurementBase {
 
     CalculateH(non_const_state, H_new);
 
-    Eigen::Matrix3d C_iw = state.Get<StateDefinition_T::q>().conjugate().toRotationMatrix();
-    Eigen::Vector3d v_iw = state.Get<StateDefinition_T::v>();
-    Eigen::Vector2d z_v_exp = (C_iw * v_iw).block<2,1>(0,0);
+    Eigen::Quaterniond q = state.Get<StateDefinition_T::q>();
+    double yaw = std::atan2(2.*(q.w()*q.z() + q.x()*q.y()), 1.-2.*(q.y()*q.y() + q.z()*q.z()));
+    Eigen::Vector2d v_w = state.Get<StateDefinition_T::v>().block<2,1>(0,0);
+    Eigen::Vector2d v_m(
+        std::cos(yaw) * v_w(0) - std::sin(yaw) * v_w(1),
+        std::sin(yaw) * v_w(0) + std::cos(yaw) * v_w(1));
 
-    r_old = z_v_ - z_v_exp;
+    r_old = v_m - v_w;
 
     this->CalculateAndApplyCorrection(non_const_state, core, H_new, r_old, R_);
   }
