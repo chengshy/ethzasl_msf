@@ -44,7 +44,7 @@ struct RangeMeasurement : public RangeMeasurementBase {
     H_old.setZero();
 
     // Get measurements.
-    z_p_ = Eigen::Matrix<double, 1, 1>::Constant(msg->range);
+    z_p_ = Eigen::Matrix<double, 1, 1>(msg->range);
     range_min_ = msg->min_range;
     range_max_ = msg->max_range;
 

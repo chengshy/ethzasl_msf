@@ -45,8 +45,7 @@ struct OptiFlowMeasurement : public OptiFlowMeasurementBase {
     H_old.setZero();
 
     // Get measurements.
-    //
-    z_v_ = Eigen::Matrix<double, 2, 1>::Constant(msg->twist.linear.x, msg->twist.linear.y);
+    z_v_ = Eigen::Matrix<double, 2, 1>(msg->twist.linear.x, msg->twist.linear.y);
 
     const double s_zv = n_zv_ * n_zv_;
     R_ = (Eigen::Matrix<double, nMeasurements, 1>() << s_zv, s_zv).finished()
