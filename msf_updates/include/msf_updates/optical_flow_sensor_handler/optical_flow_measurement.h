@@ -117,8 +117,8 @@ struct OptiFlowMeasurement : public OptiFlowMeasurementBase {
     double yaw = std::atan2(2.*(q.w()*q.z() + q.x()*q.y()), 1.-2.*(q.y()*q.y() + q.z()*q.z()));
     Eigen::Vector2d v_w = state.Get<StateDefinition_T::v>().block<2,1>(0,0);
     Eigen::Vector2d v_m(
-        std::cos(yaw) * v_w(0) - std::sin(yaw) * v_w(1),
-        std::sin(yaw) * v_w(0) + std::cos(yaw) * v_w(1));
+        std::cos(yaw) * z_v_(0) - std::sin(yaw) * z_v_(1),
+        std::sin(yaw) * z_v_(0) + std::cos(yaw) * z_v_(1));
 
     r_old = v_m - v_w;
 
